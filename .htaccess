@@ -1,0 +1,145 @@
+# ==========================================
+# Configuración de Seguridad Apache
+# ==========================================
+
+# Habilitar motor de reescritura
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Forzar HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP_HOST} !^localhost
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Prevenir acceso a archivos sensibles
+    RewriteRule ^(.git|config|\.env) - [F,L]
+</IfModule>
+
+# ==========================================
+# Headers de Seguridad
+# ==========================================
+
+<IfModule mod_headers.c>
+    # Content Security Policy
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+
+    # Prevenir MIME type sniffing
+    Header set X-Content-Type-Options "nosniff"
+
+    # Protección XSS
+    Header set X-XSS-Protection "1; mode=block"
+
+    # Prevenir clickjacking
+    Header set X-Frame-Options "DENY"
+
+    # Referrer Policy
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Permissions Policy (antes Feature Policy)
+    Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
+
+    # Strict Transport Security (HSTS)
+    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Remove server information
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# ==========================================
+# Protección de Archivos
+# ==========================================
+
+# Denegar acceso a archivos de configuración
+<FilesMatch "\.(git|gitignore|htaccess|htpasswd|ini|log|sh|sql|env|config)$">
+    Require all denied
+</FilesMatch>
+
+# Denegar acceso a directorios ocultos
+<DirectoryMatch "^\.|\/\.">
+    Require all denied
+</DirectoryMatch>
+
+# ==========================================
+# Deshabilitar Directory Listing
+# ==========================================
+Options -Indexes
+
+# ==========================================
+# Protección contra Hotlinking
+# ==========================================
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteCond %{HTTP_REFERER} !^$
+    RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?yourdomain.com [NC]
+    RewriteRule \.(jpg|jpeg|png|gif|svg|webp)$ - [NC,F,L]
+</IfModule>
+
+# ==========================================
+# Compresión GZIP
+# ==========================================
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# ==========================================
+# Cache Control
+# ==========================================
+<IfModule mod_expires.c>
+    ExpiresActive On
+
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+
+    # CSS and JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+
+    # HTML
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# ==========================================
+# Protección contra inyección de código
+# ==========================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Bloquear strings sospechosas en URL
+    RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} (\.\.\/|\.\.\\) [OR]
+    RewriteCond %{QUERY_STRING} (eval\(|base64_decode|gzinflate) [NC,OR]
+    RewriteCond %{QUERY_STRING} (<|%3C).*iframe.*(>|%3E) [NC]
+    RewriteRule ^(.*)$ - [F,L]
+</IfModule>
+
+# ==========================================
+# Límite de tamaño de solicitudes
+# ==========================================
+<IfModule mod_security.c>
+    # Limitar tamaño de request body a 10MB
+    SecRequestBodyLimit 10485760
+</IfModule>
+
+# ==========================================
+# Charset UTF-8
+# ==========================================
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+    AddCharset UTF-8 .html .css .js .json .xml
+</IfModule>
+
+# ==========================================
+# Error Pages personalizadas (opcional)
+# ==========================================
+# ErrorDocument 400 /error.html
+# ErrorDocument 401 /error.html
+# ErrorDocument 403 /error.html
+# ErrorDocument 404 /error.html
+# ErrorDocument 500 /error.html

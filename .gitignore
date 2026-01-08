@@ -1,0 +1,233 @@
+# ==========================================
+# Sistema Operativo
+# ==========================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+
+# ==========================================
+# Editores e IDEs
+# ==========================================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs (PhpStorm, WebStorm, etc.)
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ==========================================
+# Archivos de Configuración Sensibles
+# ==========================================
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Configuración local
+config.local.js
+config.local.json
+settings.local.json
+
+# Credenciales
+credentials.json
+secrets.json
+*.key
+*.pem
+*.p12
+*.pfx
+
+# ==========================================
+# Logs
+# ==========================================
+
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# ==========================================
+# Dependencias y Paquetes
+# ==========================================
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+Pipfile.lock
+poetry.lock
+
+# Ruby
+*.gem
+*.rbc
+/.config
+/coverage/
+/InstalledFiles
+/pkg/
+/spec/reports/
+/test/tmp/
+/test/version_tmp/
+/tmp/
+Gemfile.lock
+
+# ==========================================
+# Build y Compilación
+# ==========================================
+
+# Archivos compilados
+dist/
+build/
+out/
+*.min.js
+*.min.css
+
+# Cache
+.cache/
+.parcel-cache/
+.webpack/
+.next/
+.nuxt/
+
+# ==========================================
+# Testing
+# ==========================================
+
+# Coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Test results
+test-results/
+.pytest_cache/
+.coverage
+
+# ==========================================
+# Bases de Datos
+# ==========================================
+
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+
+# ==========================================
+# Backups y Temporales
+# ==========================================
+
+# Backups
+*.bak
+*.backup
+*.old
+*.orig
+*.tmp
+
+# Archivos temporales
+tmp/
+temp/
+*.cache
+
+# ==========================================
+# Específico del Proyecto
+# ==========================================
+
+# Datos de simulación (si son muy grandes)
+data/raw/*
+data/processed/*
+!data/.gitkeep
+
+# Resultados (si son temporales)
+results/temp/*
+
+# Uploads temporales
+uploads/temp/*
+
+# ==========================================
+# Seguridad
+# ==========================================
+
+# Archivos sensibles que no deben subirse
+*.private
+private/
+confidential/
+
+# Certificados SSL (locales)
+*.crt
+*.cer
+*.der
+
+# ==========================================
+# Varios
+# ==========================================
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Documentos de trabajo
+TODO.txt
+NOTES.txt
+draft/
