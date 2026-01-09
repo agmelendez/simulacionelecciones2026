@@ -6,204 +6,489 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-ancestors 'none';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self'; frame-ancestors 'none';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Simulación de Elecciones Presidenciales 2026 - Modelo predictivo basado en Python para análisis electoral">
-    <meta name="keywords" content="elecciones, simulación, predicción electoral, análisis político, Python">
-    <meta name="author" content="Simulación Elecciones 2026">
+    <meta name="description" content="Simulación Electoral Costa Rica 2026 - Análisis Probabilístico basado en 200,000 simulaciones">
+    <meta name="keywords" content="elecciones, simulación, predicción electoral, análisis político, Python, Costa Rica 2026">
+    <meta name="author" content="Agustín Gómez Meléndez - CIODD-UCR">
 
-    <title>Simulación Elecciones Presidenciales 2026</title>
+    <title>Simulación Electoral Costa Rica 2026 - Análisis Probabilístico</title>
 
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --neutral-dark: #333333;
+            --neutral-medium: #666666;
+            --neutral-light: #f4f4f4;
+            --neutral-border: #dee2e6;
+        }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: var(--neutral-dark);
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+            border-bottom: 1px solid var(--neutral-border);
+            padding: 80px 0;
+        }
+        .section-title {
+            border-bottom: 2px solid var(--neutral-dark);
+            display: inline-block;
+            margin-bottom: 30px;
+            padding-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        .card-simple {
+            background: #ffffff;
+            border: 1px solid var(--neutral-border);
+            border-radius: 0;
+            padding: 25px;
+            height: 100%;
+        }
+        .stat-box {
+            background-color: var(--neutral-light);
+            padding: 30px;
+            text-align: center;
+            border: 1px solid var(--neutral-border);
+        }
+        .highlight-val {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--neutral-dark);
+        }
+        .candidate-table th {
+            background-color: #eeeeee;
+            color: var(--neutral-dark);
+            border-bottom: 2px solid var(--neutral-dark);
+        }
+        .footer-neutral {
+            background-color: #ffffff;
+            border-top: 1px solid var(--neutral-border);
+            padding: 40px 0;
+            color: var(--neutral-medium);
+        }
+        .btn-neutral {
+            background-color: var(--neutral-dark);
+            color: white;
+            border-radius: 0;
+            padding: 10px 25px;
+        }
+        .btn-neutral:hover {
+            background-color: #000;
+            color: white;
+        }
+        .nav-tabs .nav-link {
+            color: var(--neutral-medium);
+            border-radius: 0;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: var(--neutral-dark);
+            color: white;
+            border-color: var(--neutral-dark);
+        }
+        .visualization-box {
+            border: 1px solid var(--neutral-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+        }
+        .visualization-box img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--neutral-border);
+        }
+        .git-command {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        .file-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .file-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--neutral-border);
+        }
+        .file-list li:before {
+            content: "📄 ";
+            margin-right: 8px;
+        }
+        .resource-card {
+            border: 1px solid var(--neutral-border);
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: box-shadow 0.3s;
+        }
+        .resource-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="navbar">
-            <div class="container">
-                <div class="logo">
-                    <h1>🗳️ Elecciones 2026</h1>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="#home">Inicio</a></li>
-                    <li><a href="#about">Acerca de</a></li>
-                    <li><a href="#results">Resultados</a></li>
-                    <li><a href="#methodology">Metodología</a></li>
-                    <li><a href="#contact">Contacto</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h2 class="hero-title">Simulación de Elecciones Presidenciales 2026</h2>
-                <p class="hero-subtitle">Modelo predictivo basado en análisis de datos con Python</p>
-                <div class="hero-buttons">
-                    <a href="#results" class="btn btn-primary">Ver Resultados</a>
-                    <a href="#methodology" class="btn btn-secondary">Conocer Metodología</a>
+<header class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-5 fw-bold">Análisis de Simulación Electoral</h1>
+        <p class="lead">Costa Rica 2026: Proyección de Primera Ronda</p>
+        <p class="text-muted small">Basado en el modelo de Agustín Gómez Meléndez (CIODD-UCR)</p>
+    </div>
+</header>
+
+<main class="container my-5">
+
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs mb-4" id="mainTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="estudio-tab" data-bs-toggle="tab" data-bs-target="#estudio" type="button" role="tab">Estudio</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="resultados-tab" data-bs-toggle="tab" data-bs-target="#resultados" type="button" role="tab">Resultados</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="visualizaciones-tab" data-bs-toggle="tab" data-bs-target="#visualizaciones" type="button" role="tab">Visualizaciones</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="repositorio-tab" data-bs-toggle="tab" data-bs-target="#repositorio" type="button" role="tab">Repositorio Git</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="recursos-tab" data-bs-toggle="tab" data-bs-target="#recursos" type="button" role="tab">Recursos</button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="mainTabsContent">
+
+        <!-- ESTUDIO TAB -->
+        <div class="tab-pane fade show active" id="estudio" role="tabpanel">
+            <section class="mb-5">
+                <h2 class="section-title">Acerca del Estudio</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card-simple">
+                            <h4>¿Qué se hizo y por qué?</h4>
+                            <p class="small">Se creó un modelo matemático que simula la elección <strong>200,000 veces</strong> para entender qué tan probable es que se defina la presidencia en primera ronda. Esto se hace porque las encuestas son solo una "foto" del momento, mientras que este modelo mide la incertidumbre y el riesgo de cambios futuros.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-simple">
+                            <h4>¿De dónde vienen los datos?</h4>
+                            <p class="small">Se utilizaron <strong>7 encuestas</strong> de alta calidad (tipo papeleta) realizadas entre octubre de 2025 y enero de 2026. También se incluyó información histórica sobre cómo votan realmente los costarricenses, diferenciando entre quienes siempre votan y quienes deciden al final.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-simple">
+                            <h4>Los supuestos del modelo</h4>
+                            <ul class="small ps-3">
+                                <li>Corrige los sesgos específicos de cada encuestadora ("efecto de casa").</li>
+                                <li>Trata a los <strong>indecisos (41.91%)</strong> como el factor clave que definirá el resultado.</li>
+                                <li>Agrupa a partidos pequeños para dar mayor estabilidad a los cálculos.</li>
+                                <li>Asume que la participación depende de si hay líderes claros o mucha fragmentación.</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
-    </section>
 
-    <!-- About Section -->
-    <section id="about" class="section about">
-        <div class="container">
-            <h2 class="section-title">Acerca del Proyecto</h2>
-            <div class="about-content">
-                <p>
-                    Este proyecto utiliza modelos estadísticos y machine learning en Python para simular
-                    y predecir resultados de las elecciones presidenciales 2026. El análisis se basa en
-                    datos históricos, encuestas y variables socioeconómicas.
-                </p>
-                <div class="features">
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3>Análisis de Datos</h3>
-                        <p>Procesamiento de grandes volúmenes de datos electorales históricos</p>
+        <!-- RESULTADOS TAB -->
+        <div class="tab-pane fade" id="resultados" role="tabpanel">
+            <section class="mb-5">
+                <h2 class="section-title">Indicadores Clave</h2>
+                <div class="row g-0">
+                    <div class="col-md-4 stat-box border-end-0">
+                        <p class="mb-0 small text-uppercase">Victoria en 1ra Ronda</p>
+                        <div class="highlight-val">56.71%</div>
+                        <p class="small text-muted">Probabilidad Laura Fernández ≥ 40%</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🤖</div>
-                        <h3>Machine Learning</h3>
-                        <p>Modelos predictivos entrenados con algoritmos avanzados</p>
+                    <div class="col-md-4 stat-box border-end-0">
+                        <p class="mb-0 small text-uppercase">Probabilidad de Balotaje</p>
+                        <div class="highlight-val">33.32%</div>
+                        <p class="small text-muted">Ningún candidato alcanza el 40%</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🔒</div>
-                        <h3>Seguridad</h3>
-                        <p>Implementación de medidas de ciberseguridad y protección de datos</p>
+                    <div class="col-md-4 stat-box">
+                        <p class="mb-0 small text-uppercase">Liderazgo (1er Lugar)</p>
+                        <div class="highlight-val">73.92%</div>
+                        <p class="small text-muted">Probabilidad de quedar de primero</p>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="section-title">Proyección de Votos Válidos</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle candidate-table">
+                        <thead>
+                            <tr>
+                                <th>Candidato</th>
+                                <th class="text-center">Media (%)</th>
+                                <th class="text-center">Intervalo (80%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Laura Fernández</strong></td>
+                                <td class="text-center">44.99%</td>
+                                <td class="text-center">[18.85% - 72.49%]</td>
+                            </tr>
+                            <tr>
+                                <td>Álvaro Ramos</td>
+                                <td class="text-center">17.96%</td>
+                                <td class="text-center">[5.27% - 35.03%]</td>
+                            </tr>
+                            <tr>
+                                <td>Ariel Robles</td>
+                                <td class="text-center">10.62%</td>
+                                <td class="text-center">[2.10% - 23.28%]</td>
+                            </tr>
+                            <tr>
+                                <td>Claudia Dobles</td>
+                                <td class="text-center">8.20%</td>
+                                <td class="text-center">[1.07% - 19.63%]</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <td>Otros Agregados</td>
+                                <td class="text-center">9.27%</td>
+                                <td class="text-center">[2.87% - 17.92%]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="small text-muted mt-2">Nota: Los intervalos amplios reflejan la alta incertidumbre causada por el 41.91% de indecisos.</p>
+                </div>
+            </section>
         </div>
-    </section>
 
-    <!-- Results Section -->
-    <section id="results" class="section results">
-        <div class="container">
-            <h2 class="section-title">Resultados de Simulación</h2>
-            <div class="results-container">
-                <div class="alert alert-info">
-                    <strong>Próximamente:</strong> Los resultados de las simulaciones se publicarán aquí.
-                    El modelo está siendo calibrado con los datos más recientes.
+        <!-- VISUALIZACIONES TAB -->
+        <div class="tab-pane fade" id="visualizaciones" role="tabpanel">
+            <section class="mb-5">
+                <h2 class="section-title">Gráficos y Análisis Visual</h2>
+
+                <div class="visualization-box">
+                    <h4>Resultados Completos del Modelo</h4>
+                    <p class="small text-muted">Visualización integral de las simulaciones con distribuciones de probabilidad</p>
+                    <img src="Resultados del modelo.jpeg" alt="Resultados del Modelo de Simulación" class="mb-3">
+                    <a href="Resultados del modelo.jpeg" class="btn btn-neutral btn-sm" download>Descargar Imagen</a>
                 </div>
 
-                <!-- Placeholder for future results -->
-                <div class="results-placeholder">
-                    <p>Aquí se mostrarán:</p>
-                    <ul>
-                        <li>Gráficos interactivos de tendencias</li>
-                        <li>Mapas de calor por región</li>
-                        <li>Probabilidades de escenarios</li>
-                        <li>Análisis comparativos</li>
+                <div class="visualization-box">
+                    <h4>Simulación Final Integrada</h4>
+                    <p class="small text-muted">Análisis probabilístico de escenarios electorales</p>
+                    <img src="simulacion_final_integrada (1).png" alt="Simulación Final Integrada" class="mb-3">
+                    <a href="simulacion_final_integrada (1).png" class="btn btn-neutral btn-sm" download>Descargar Imagen</a>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="resource-card">
+                            <h5>Datos: Resumen por Candidato</h5>
+                            <p class="small">CSV con estadísticas detalladas de cada candidato</p>
+                            <a href="resumen_candidatos_final.csv" class="btn btn-outline-dark btn-sm">Ver CSV</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="resource-card">
+                            <h5>Datos: Combinaciones Top 2</h5>
+                            <p class="small">Análisis de pares de candidatos más probables</p>
+                            <a href="top2_pairs_final.csv" class="btn btn-outline-dark btn-sm">Ver CSV</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- REPOSITORIO GIT TAB -->
+        <div class="tab-pane fade" id="repositorio" role="tabpanel">
+            <section class="mb-5">
+                <h2 class="section-title">Cómo Funciona Este Repositorio</h2>
+
+                <div class="card-simple mb-4">
+                    <h4>Estructura del Proyecto</h4>
+                    <p>Este repositorio contiene todos los componentes del análisis electoral:</p>
+                    <ul class="file-list">
+                        <li><strong>Modelo_de_Simulación_Elecciones.ipynb</strong> - Notebook de Python con el código completo</li>
+                        <li><strong>Articulo Modelo de Simulación Elecciones CR 2026.pdf</strong> - Documento académico completo</li>
+                        <li><strong>DOCUMENTO_TECNICO_METODOLOGIA.txt (1).pdf</strong> - Metodología técnica detallada</li>
+                        <li><strong>resumen_candidatos_final.csv</strong> - Datos de resultados por candidato</li>
+                        <li><strong>top2_pairs_final.csv</strong> - Análisis de combinaciones</li>
+                        <li><strong>Resultados del modelo.jpeg</strong> - Visualización principal</li>
+                        <li><strong>simulacion_final_integrada (1).png</strong> - Gráfico de simulación</li>
                     </ul>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Methodology Section -->
-    <section id="methodology" class="section methodology">
-        <div class="container">
-            <h2 class="section-title">Metodología</h2>
-            <div class="methodology-content">
-                <h3>Proceso de Simulación</h3>
-                <ol class="methodology-steps">
-                    <li>
-                        <strong>Recopilación de Datos:</strong>
-                        Datos históricos electorales, encuestas y variables socioeconómicas
-                    </li>
-                    <li>
-                        <strong>Preprocesamiento:</strong>
-                        Limpieza, normalización y validación de datos
-                    </li>
-                    <li>
-                        <strong>Modelado:</strong>
-                        Aplicación de algoritmos de machine learning (regresión, clasificación, ensambles)
-                    </li>
-                    <li>
-                        <strong>Validación:</strong>
-                        Cross-validation y testing con datos históricos
-                    </li>
-                    <li>
-                        <strong>Simulación:</strong>
-                        Ejecución de múltiples escenarios con Monte Carlo
-                    </li>
-                </ol>
-
-                <div class="tech-stack">
-                    <h3>Tecnologías Utilizadas</h3>
-                    <div class="tech-tags">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">Pandas</span>
-                        <span class="tech-tag">NumPy</span>
-                        <span class="tech-tag">Scikit-learn</span>
-                        <span class="tech-tag">Matplotlib</span>
-                        <span class="tech-tag">Seaborn</span>
+                <div class="card-simple mb-4">
+                    <h4>Clonar el Repositorio</h4>
+                    <p>Para obtener una copia local del proyecto:</p>
+                    <div class="git-command">
+                        git clone https://github.com/agmelendez/simulacionelecciones2026.git<br>
+                        cd simulacionelecciones2026
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="section contact">
-        <div class="container">
-            <h2 class="section-title">Contacto</h2>
-            <div class="contact-content">
-                <p>Para más información sobre el proyecto o para colaboraciones:</p>
-                <form id="contactForm" class="contact-form" novalidate>
-                    <div class="form-group">
-                        <label for="name">Nombre:</label>
-                        <input type="text" id="name" name="name" required maxlength="100"
-                               pattern="[A-Za-zÀ-ÿ\s]{2,100}"
-                               title="Solo letras y espacios, mínimo 2 caracteres">
+                <div class="card-simple mb-4">
+                    <h4>Ejecutar el Análisis</h4>
+                    <p><strong>Requisitos:</strong> Python 3.8+, Jupyter Notebook</p>
+                    <div class="git-command">
+                        # Instalar dependencias<br>
+                        pip install pandas numpy matplotlib seaborn scipy jupyter<br><br>
+                        # Abrir el notebook<br>
+                        jupyter notebook "Modelo_de_Simulación_Elecciones.ipynb"
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required maxlength="100"
-                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                               title="Ingrese un email válido">
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Mensaje:</label>
-                        <textarea id="message" name="message" rows="5" required maxlength="1000"
-                                  title="Máximo 1000 caracteres"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2026 Simulación Elecciones Presidenciales. Todos los derechos reservados.</p>
-                <p class="footer-disclaimer">
-                    <small>
-                        Este es un proyecto de análisis estadístico con fines educativos e informativos.
-                        Los resultados no constituyen predicciones oficiales.
-                    </small>
-                </p>
-                <div class="footer-security">
-                    <small>🔒 Sitio seguro con protección HTTPS y CSP</small>
                 </div>
-            </div>
-        </div>
-    </footer>
 
-    <!-- Scripts -->
-    <script src="js/security.js"></script>
-    <script src="js/main.js"></script>
+                <div class="card-simple mb-4">
+                    <h4>Tecnologías Utilizadas</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Lenguajes y Frameworks</h6>
+                            <ul>
+                                <li>Python 3.x</li>
+                                <li>Jupyter Notebook</li>
+                                <li>HTML5 / CSS3</li>
+                                <li>Bootstrap 5</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Librerías de Python</h6>
+                            <ul>
+                                <li>Pandas - Análisis de datos</li>
+                                <li>NumPy - Cálculos numéricos</li>
+                                <li>Matplotlib/Seaborn - Visualización</li>
+                                <li>SciPy - Estadística avanzada</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-simple">
+                    <h4>Contribuir al Proyecto</h4>
+                    <p>Para contribuir con mejoras o correcciones:</p>
+                    <div class="git-command">
+                        # Crear una rama para tu feature<br>
+                        git checkout -b feature/mi-mejora<br><br>
+                        # Hacer tus cambios y commit<br>
+                        git add .<br>
+                        git commit -m "Descripción de los cambios"<br><br>
+                        # Push y crear Pull Request<br>
+                        git push origin feature/mi-mejora
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- RECURSOS TAB -->
+        <div class="tab-pane fade" id="recursos" role="tabpanel">
+            <section class="mb-5">
+                <h2 class="section-title">Recursos y Documentación</h2>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="resource-card">
+                            <h5>📄 Artículo Académico Completo</h5>
+                            <p class="small">Documento técnico con toda la metodología, resultados y análisis estadístico del modelo de simulación electoral.</p>
+                            <a href="Articulo Modelo de Simulación Elecciones CR 2026.pdf" class="btn btn-neutral btn-sm" target="_blank">Abrir PDF</a>
+                            <a href="Articulo Modelo de Simulación Elecciones CR 2026.pdf" class="btn btn-outline-dark btn-sm ms-2" download>Descargar</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="resource-card">
+                            <h5>📊 Documentación Técnica - Metodología</h5>
+                            <p class="small">Documento técnico detallado que explica los métodos estadísticos, supuestos del modelo y procesos de validación.</p>
+                            <a href="DOCUMENTO_TECNICO_METODOLOGIA.txt (1).pdf" class="btn btn-neutral btn-sm" target="_blank">Abrir PDF</a>
+                            <a href="DOCUMENTO_TECNICO_METODOLOGIA.txt (1).pdf" class="btn btn-outline-dark btn-sm ms-2" download>Descargar</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="resource-card">
+                            <h5>💻 Código Python - Jupyter Notebook</h5>
+                            <p class="small">Notebook interactivo con todo el código del modelo de simulación. Incluye 200,000 simulaciones Monte Carlo.</p>
+                            <a href="Modelo_de_Simulación_Elecciones.ipynb" class="btn btn-neutral btn-sm" download>Descargar Notebook</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="resource-card">
+                            <h5>🔒 Seguridad del Proyecto</h5>
+                            <p class="small">Política de seguridad y mejores prácticas implementadas en el repositorio.</p>
+                            <a href="SECURITY.md" class="btn btn-neutral btn-sm">Ver SECURITY.md</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="resource-card">
+                            <h5>📖 Documentación del Proyecto - README</h5>
+                            <p class="small">Guía completa del repositorio, instrucciones de uso y descripción general del proyecto.</p>
+                            <a href="README.md" class="btn btn-neutral btn-sm">Ver README.md</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <h3>Datos Abiertos (Open Data)</h3>
+                    <p class="text-muted small">Todos los datos generados por el modelo están disponibles en formato CSV para análisis independiente:</p>
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6">
+                            <div class="card-simple">
+                                <h6>resumen_candidatos_final.csv</h6>
+                                <p class="small">Estadísticas por candidato: medias, intervalos de confianza, probabilidades</p>
+                                <a href="resumen_candidatos_final.csv" class="btn btn-outline-dark btn-sm">Descargar CSV</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-simple">
+                                <h6>top2_pairs_final.csv</h6>
+                                <p class="small">Análisis de combinaciones más probables para segunda ronda</p>
+                                <a href="top2_pairs_final.csv" class="btn btn-outline-dark btn-sm">Descargar CSV</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </div>
+</main>
+
+<footer class="footer-neutral">
+    <div class="container text-center">
+        <p class="mb-1"><strong>Centro de Investigación en Opinión y Datos (CIODD)</strong></p>
+        <p class="small">Universidad de Costa Rica | San José, Costa Rica</p>
+        <p class="small text-muted mt-3">
+            Este es un proyecto de análisis estadístico con fines educativos e informativos.<br>
+            Los resultados no constituyen predicciones oficiales.
+        </p>
+        <div class="mt-4">
+            <a href="Articulo Modelo de Simulación Elecciones CR 2026.pdf" class="btn btn-neutral btn-sm">Documento Completo (PDF)</a>
+            <a href="#recursos" class="btn btn-outline-dark btn-sm ms-2">Datos Abiertos</a>
+            <a href="https://github.com/agmelendez/simulacionelecciones2026" class="btn btn-outline-dark btn-sm ms-2" target="_blank">Ver en GitHub</a>
+        </div>
+        <div class="mt-4">
+            <small>🔒 Sitio seguro con protección HTTPS y CSP</small>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom Scripts -->
+<script src="js/security.js"></script>
+<script src="js/main.js"></script>
+
 </body>
 </html>
