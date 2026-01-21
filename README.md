@@ -1,10 +1,33 @@
-# 🗳️ Simulación Elecciones Presidenciales 2026
+# 🗳️ Simulación Elecciones Presidenciales Costa Rica 2026
 
 Landing page para compartir resultados de simulaciones y predicciones electorales basadas en modelos de Machine Learning desarrollados en Python.
 
+## 🆕 Actualización - 21 de enero 2026 (Modelo v2.1)
+
+**Última actualización del modelo:** 21 de enero 2026
+
+### 📊 Indicadores Clave (Corte 21 enero 2026)
+- **Probabilidad de Victoria en 1ra Ronda:** 62.45%
+- **Media de Voto Válido (Laura Fernández):** 41.12%
+- **Nivel de Indecisión:** 32%
+- **Pool de Encuestas:** Incluye medición más reciente del CIEP-UCR
+
+### 🛠️ Mejoras Técnicas del Modelo v2.1
+1. **Ajuste de Logit-Normal Mejorado:** Matriz de covarianza que captura mejor la correlación entre candidatos del mismo bloque ideológico
+2. **Nuevo Escenario de "Dispersión":** Parte de los indecisos migra a candidaturas minoritarias (RESTO), reflejando el fraccionamiento observado en encuestas recientes
+3. **Decaimiento Temporal:** Las encuestas de octubre y noviembre de 2025 tienen peso significativamente menor comparado con las de enero de 2026
+4. **Sensibilidad a Abstención Técnica:** Factor que impacta la distribución final de votos
+
+### 📈 Top 3 Escenarios de Segunda Ronda
+1. **Laura Fernández vs Álvaro Ramos:** 45%
+2. **Laura Fernández vs Claudia Dobles:** 18%
+3. **Laura Fernández vs Ariel Robles:** 12%
+
 ## 📋 Descripción
 
-Este proyecto presenta un sitio web estático y seguro diseñado para publicar análisis predictivos de las elecciones presidenciales 2026. El sitio implementa las mejores prácticas de seguridad web y ciberseguridad para proteger tanto el contenido como los usuarios.
+Este proyecto presenta un sitio web estático y seguro diseñado para publicar análisis predictivos de las elecciones presidenciales de Costa Rica 2026. El sitio implementa las mejores prácticas de seguridad web y ciberseguridad para proteger tanto el contenido como los usuarios.
+
+El modelo utiliza **100,000 simulaciones Monte Carlo** con técnicas estadísticas avanzadas para proyectar posibles resultados electorales, considerando la incertidumbre inherente en las encuestas y el comportamiento de votantes indecisos.
 
 ## ✨ Características
 
@@ -32,23 +55,37 @@ Este proyecto presenta un sitio web estático y seguro diseñado para publicar a
 ```
 simulacionelecciones2026/
 │
-├── index.html              # Página principal
-├── .htaccess              # Configuración de seguridad Apache
-├── README.md              # Documentación
-├── .gitignore            # Archivos ignorados por Git
+├── index.html                              # Página principal
+├── .htaccess                              # Configuración de seguridad Apache
+├── README.md                              # Documentación
+├── .gitignore                            # Archivos ignorados por Git
+│
+├── cr_presidential_mc_2026_updated.py     # Script de simulación v2.1 [NUEVO]
+├── Modelo_de_Simulación_Elecciones.ipynb  # Jupyter Notebook con análisis
+│
+├── Articulo Modelo de Simulación Elecciones CR 2026.pdf  # Documento académico
+├── DOCUMENTO_TECNICO_METODOLOGIA.txt (1).pdf             # Metodología técnica
+│
+├── resumen_mc_2026.json                   # Métricas clave del modelo [NUEVO]
+├── figura_mc_2026.png                     # Visualización principal [NUEVO]
+├── simulaciones_mc_2026.csv               # Dataset de simulaciones [NUEVO]
+├── resumen_candidatos_mc_2026.csv         # Estadísticas por candidato [NUEVO]
+├── escenarios_segunda_ronda_2026.csv      # Análisis de pares Top 2 [NUEVO]
+│
+├── resumen_candidatos_final.csv           # Datos históricos
+├── top2_pairs_final.csv                   # Combinaciones históricas
+├── Resultados del modelo.jpeg             # Visualización histórica
+├── simulacion_final_integrada (1).png     # Gráfico histórico
 │
 ├── css/
-│   └── styles.css        # Estilos del sitio
+│   └── styles.css                         # Estilos del sitio
 │
 ├── js/
-│   ├── security.js       # Módulo de seguridad
-│   └── main.js           # Lógica principal
-│
-├── assets/
-│   └── images/           # Imágenes del sitio
+│   ├── security.js                        # Módulo de seguridad
+│   └── main.js                            # Lógica principal
 │
 └── config/
-    └── security-headers.conf  # Configuración headers para varios servidores
+    └── security-headers.conf              # Configuración headers
 ```
 
 ## 🚀 Instalación y Despliegue
@@ -253,30 +290,45 @@ nikto -h https://tudominio.com
 # Visitar: https://www.ssllabs.com/ssltest/
 ```
 
-## 📊 Agregar Resultados de Simulación
+## 📊 Ejecutar el Modelo de Simulación
 
-Para publicar resultados del modelo de Python:
+### Opción 1: Ejecutar el Script Python (v2.1)
 
-1. Crear visualizaciones en Python (matplotlib, seaborn, plotly)
-2. Exportar como imágenes o HTML interactivo
-3. Agregar al directorio `assets/images/`
-4. Actualizar la sección `#results` en `index.html`
+```bash
+# Instalar dependencias
+pip install numpy pandas matplotlib seaborn scipy
 
-Ejemplo de código Python para generar gráficos:
-
-```python
-import matplotlib.pyplot as plt
-import pandas as pd
-
-# Tu modelo de simulación
-results = tu_modelo.predict()
-
-# Crear visualización
-plt.figure(figsize=(12, 6))
-plt.plot(results)
-plt.title('Simulación Elecciones 2026')
-plt.savefig('assets/images/simulation_results.png')
+# Ejecutar el script de simulación
+python3 cr_presidential_mc_2026_updated.py
 ```
+
+El script generará automáticamente:
+- `resumen_mc_2026.json` - Métricas de probabilidad exactas
+- `figura_mc_2026.png` - Histograma de distribución con barrera del 40%
+- `simulaciones_mc_2026.csv` - Dataset completo (muestra de 10,000)
+- `resumen_candidatos_mc_2026.csv` - Estadísticas por candidato
+- `escenarios_segunda_ronda_2026.csv` - Análisis de pares Top 2
+
+### Opción 2: Usar Jupyter Notebook
+
+```bash
+# Instalar Jupyter
+pip install jupyter
+
+# Abrir el notebook
+jupyter notebook "Modelo_de_Simulación_Elecciones.ipynb"
+```
+
+### Características del Modelo v2.1
+
+- **100,000 simulaciones Monte Carlo**
+- **Distribución Logit-Normal** con matriz de covarianza mejorada
+- **3 Escenarios de Indecisos:**
+  - Balanceado (40%): Distribución proporcional
+  - Polarizado (35%): Concentración en top 2
+  - Dispersión (25%): Migración a candidaturas minoritarias [NUEVO]
+- **Decaimiento temporal** en el peso de encuestas antiguas
+- **Sensibilidad a abstención técnica**
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -293,18 +345,27 @@ plt.savefig('assets/images/simulation_results.png')
 - Rate Limiting
 - CSRF Protection
 
-### Backend (para modelo Python)
-- Python 3.x
-- Pandas
-- NumPy
-- Scikit-learn
-- Matplotlib/Seaborn
+### Backend (Modelo de Simulación)
+- Python 3.8+
+- **NumPy** - Cálculos numéricos y simulaciones Monte Carlo
+- **Pandas** - Procesamiento y análisis de datos de encuestas
+- **SciPy** - Distribuciones estadísticas (logit-normal)
+- **Matplotlib** - Visualización de resultados
+- **Seaborn** - Gráficos estadísticos avanzados
+
+### Metodología Estadística
+- **Monte Carlo Simulation** (100,000 iteraciones)
+- **Distribución Logit-Normal** con covarianza
+- **Pooling de encuestas** con decaimiento temporal
+- **Análisis de correlación** entre bloques ideológicos
+- **Modelado de indecisos** con múltiples escenarios
 
 ## 📝 To-Do
 
-- [ ] Conectar formulario con backend real
-- [ ] Agregar resultados de simulación
-- [ ] Implementar gráficos interactivos
+- [x] Agregar resultados de simulación (Actualizado 21 enero 2026)
+- [x] Crear modelo de simulación v2.1 con mejoras técnicas
+- [x] Documentar metodología y cambios técnicos
+- [ ] Implementar gráficos interactivos con D3.js o Plotly
 - [ ] Agregar sistema de autenticación para administradores
 - [ ] Crear dashboard para actualización de contenido
 - [ ] Implementar analytics
@@ -329,7 +390,9 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 
 ## 👤 Autor
 
-**Equipo de Simulación Elecciones 2026**
+**Agustín Gómez Meléndez**
+Centro de Investigación en Opinión y Datos (CIODD)
+Universidad de Costa Rica
 
 ## 📞 Contacto
 

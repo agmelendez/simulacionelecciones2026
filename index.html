@@ -13,11 +13,11 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Simulación Electoral Costa Rica 2026 - Análisis Probabilístico basado en 200,000 simulaciones">
-    <meta name="keywords" content="elecciones, simulación, predicción electoral, análisis político, Python, Costa Rica 2026">
+    <meta name="description" content="Simulación Electoral Costa Rica 2026 - Análisis Probabilístico basado en 100,000 simulaciones (Actualizado: 21 enero 2026)">
+    <meta name="keywords" content="elecciones, simulación, predicción electoral, análisis político, Python, Costa Rica 2026, CIEP-UCR">
     <meta name="author" content="Agustín Gómez Meléndez - CIODD-UCR">
 
-    <title>Simulación Electoral Costa Rica 2026 - Análisis Probabilístico</title>
+    <title>Simulación Electoral Costa Rica 2026 - Actualización 21 enero 2026</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -146,6 +146,7 @@
         <h1 class="display-5 fw-bold">Análisis de Simulación Electoral</h1>
         <p class="lead">Costa Rica 2026: Proyección de Primera Ronda</p>
         <p class="text-muted small">Basado en el modelo de Agustín Gómez Meléndez (CIODD-UCR)</p>
+        <p class="small"><strong>Actualización: 21 de enero 2026</strong> | Pool de encuestas incluye CIEP-UCR</p>
     </div>
 </header>
 
@@ -181,23 +182,23 @@
                     <div class="col-md-4">
                         <div class="card-simple">
                             <h4>¿Qué se hizo y por qué?</h4>
-                            <p class="small">Se creó un modelo matemático que simula la elección <strong>200,000 veces</strong> para entender qué tan probable es que se defina la presidencia en primera ronda. Esto se hace porque las encuestas son solo una "foto" del momento, mientras que este modelo mide la incertidumbre y el riesgo de cambios futuros.</p>
+                            <p class="small">Se creó un modelo matemático que simula la elección <strong>100,000 veces</strong> para entender qué tan probable es que se defina la presidencia en primera ronda. Esto se hace porque las encuestas son solo una "foto" del momento, mientras que este modelo mide la incertidumbre y el riesgo de cambios futuros.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="card-simple">
                             <h4>¿De dónde vienen los datos?</h4>
-                            <p class="small">Se utilizaron <strong>7 encuestas</strong> de alta calidad (tipo papeleta) realizadas entre octubre de 2025 y enero de 2026. También se incluyó información histórica sobre cómo votan realmente los costarricenses, diferenciando entre quienes siempre votan y quienes deciden al final.</p>
+                            <p class="small">Se utilizaron encuestas de alta calidad (tipo papeleta) con mayor peso a las mediciones recientes de <strong>enero de 2026</strong>, especialmente la del <strong>CIEP-UCR</strong>. Las encuestas de octubre y noviembre de 2025 tienen peso significativamente menor debido al <strong>decaimiento temporal</strong>.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="card-simple">
-                            <h4>Los supuestos del modelo</h4>
+                            <h4>Los supuestos del modelo (v2.1)</h4>
                             <ul class="small ps-3">
                                 <li>Corrige los sesgos específicos de cada encuestadora ("efecto de casa").</li>
-                                <li>Trata a los <strong>indecisos (41.91%)</strong> como el factor clave que definirá el resultado.</li>
-                                <li>Agrupa a partidos pequeños para dar mayor estabilidad a los cálculos.</li>
-                                <li>Asume que la participación depende de si hay líderes claros o mucha fragmentación.</li>
+                                <li>Trata a los <strong>indecisos (32%)</strong> como el factor clave que definirá el resultado.</li>
+                                <li>Ajuste de <strong>Logit-Normal</strong> mejorado con correlación entre candidatos del mismo bloque ideológico.</li>
+                                <li>Nuevo escenario de <strong>"Dispersión"</strong> donde indecisos migran a candidaturas minoritarias.</li>
                             </ul>
                         </div>
                     </div>
@@ -208,22 +209,22 @@
         <!-- RESULTADOS TAB -->
         <div class="tab-pane fade" id="resultados" role="tabpanel">
             <section class="mb-5">
-                <h2 class="section-title">Indicadores Clave</h2>
+                <h2 class="section-title">Indicadores Clave - Actualización 21 Enero 2026</h2>
                 <div class="row g-0">
                     <div class="col-md-4 stat-box border-end-0">
                         <p class="mb-0 small text-uppercase">Victoria en 1ra Ronda</p>
-                        <div class="highlight-val">56.71%</div>
+                        <div class="highlight-val">62.45%</div>
                         <p class="small text-muted">Probabilidad Laura Fernández ≥ 40%</p>
                     </div>
                     <div class="col-md-4 stat-box border-end-0">
-                        <p class="mb-0 small text-uppercase">Probabilidad de Balotaje</p>
-                        <div class="highlight-val">33.32%</div>
-                        <p class="small text-muted">Ningún candidato alcanza el 40%</p>
+                        <p class="mb-0 small text-uppercase">Media de Voto Válido</p>
+                        <div class="highlight-val">41.12%</div>
+                        <p class="small text-muted">Laura Fernández (voto válido)</p>
                     </div>
                     <div class="col-md-4 stat-box">
-                        <p class="mb-0 small text-uppercase">Liderazgo (1er Lugar)</p>
-                        <div class="highlight-val">73.92%</div>
-                        <p class="small text-muted">Probabilidad de quedar de primero</p>
+                        <p class="mb-0 small text-uppercase">Nivel de Indecisión</p>
+                        <div class="highlight-val">32%</div>
+                        <p class="small text-muted">Sensibilidad a "abstención técnica"</p>
                     </div>
                 </div>
             </section>
@@ -242,32 +243,65 @@
                         <tbody>
                             <tr>
                                 <td><strong>Laura Fernández</strong></td>
-                                <td class="text-center">44.99%</td>
-                                <td class="text-center">[18.85% - 72.49%]</td>
+                                <td class="text-center">41.12%</td>
+                                <td class="text-center">[17.50% - 68.20%]</td>
                             </tr>
                             <tr>
                                 <td>Álvaro Ramos</td>
-                                <td class="text-center">17.96%</td>
-                                <td class="text-center">[5.27% - 35.03%]</td>
+                                <td class="text-center">18.45%</td>
+                                <td class="text-center">[5.80% - 36.10%]</td>
                             </tr>
                             <tr>
                                 <td>Ariel Robles</td>
-                                <td class="text-center">10.62%</td>
-                                <td class="text-center">[2.10% - 23.28%]</td>
+                                <td class="text-center">11.20%</td>
+                                <td class="text-center">[2.45% - 24.50%]</td>
                             </tr>
                             <tr>
                                 <td>Claudia Dobles</td>
-                                <td class="text-center">8.20%</td>
-                                <td class="text-center">[1.07% - 19.63%]</td>
+                                <td class="text-center">8.85%</td>
+                                <td class="text-center">[1.30% - 21.15%]</td>
                             </tr>
                             <tr class="text-muted">
-                                <td>Otros Agregados</td>
-                                <td class="text-center">9.27%</td>
-                                <td class="text-center">[2.87% - 17.92%]</td>
+                                <td>Resto (Candidaturas Minoritarias)</td>
+                                <td class="text-center">10.38%</td>
+                                <td class="text-center">[3.15% - 19.40%]</td>
                             </tr>
                         </tbody>
                     </table>
-                    <p class="small text-muted mt-2">Nota: Los intervalos amplios reflejan la alta incertidumbre causada por el 41.91% de indecisos.</p>
+                    <p class="small text-muted mt-2">Nota: Los intervalos reflejan la incertidumbre causada por el 32% de indecisos. Modelo v2.1 con ajuste de Logit-Normal mejorado.</p>
+                </div>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="section-title">Escenarios de Segunda Ronda (Top 2)</h2>
+                <p class="small text-muted">Si no se alcanza el 40%, los emparejamientos más probables para una eventual segunda ronda son:</p>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle candidate-table">
+                        <thead>
+                            <tr>
+                                <th>Escenario</th>
+                                <th class="text-center">Probabilidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Laura Fernández</strong> vs. Álvaro Ramos</td>
+                                <td class="text-center">45%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Laura Fernández</strong> vs. Claudia Dobles</td>
+                                <td class="text-center">18%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Laura Fernández</strong> vs. Ariel Robles</td>
+                                <td class="text-center">12%</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <td>Otros escenarios combinados</td>
+                                <td class="text-center">25%</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
         </div>

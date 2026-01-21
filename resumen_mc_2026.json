@@ -1,0 +1,111 @@
+{
+  "fecha_actualizacion": "21 de enero 2026",
+  "n_simulaciones": 100000,
+  "version_modelo": "v2.1",
+  "pool_encuestas": "Incluye medición más reciente del CIEP-UCR",
+  "mejoras_tecnicas": [
+    "Ajuste de Logit-Normal mejorado con matriz de covarianza",
+    "Correlación entre candidatos del mismo bloque ideológico",
+    "Nuevo escenario de Dispersión donde indecisos migran a candidaturas minoritarias",
+    "Decaimiento temporal: encuestas oct-nov 2025 tienen menor peso"
+  ],
+  "probabilidad_primera_ronda": 62.45,
+  "media_voto_valido_lf": 41.12,
+  "intervalo_80_lf": [17.50, 68.20],
+  "nivel_indecision": 32.0,
+  "sensibilidad_abstencion_tecnica": 0.15,
+  "resumen_candidatos": {
+    "LAURA FERNÁNDEZ": {
+      "media": 41.12,
+      "std": 18.85,
+      "min": 13.50,
+      "p10": 17.50,
+      "p50": 40.20,
+      "p90": 68.20,
+      "max": 95.80
+    },
+    "ÁLVARO RAMOS": {
+      "media": 18.45,
+      "std": 11.60,
+      "min": 1.20,
+      "p10": 5.80,
+      "p50": 15.40,
+      "p90": 36.10,
+      "max": 78.50
+    },
+    "ARIEL ROBLES": {
+      "media": 11.20,
+      "std": 9.20,
+      "min": 0.50,
+      "p10": 2.45,
+      "p50": 8.60,
+      "p90": 24.50,
+      "max": 72.30
+    },
+    "CLAUDIA DOBLES": {
+      "media": 8.85,
+      "std": 8.95,
+      "min": 0.20,
+      "p10": 1.30,
+      "p50": 5.80,
+      "p90": 21.15,
+      "max": 76.40
+    },
+    "RESTO": {
+      "media": 10.38,
+      "std": 6.40,
+      "min": 0.80,
+      "p10": 3.15,
+      "p50": 8.90,
+      "p90": 19.40,
+      "max": 58.20
+    }
+  },
+  "escenarios_segunda_ronda": [
+    {
+      "candidato1": "LAURA FERNÁNDEZ",
+      "candidato2": "ÁLVARO RAMOS",
+      "probabilidad": 45.0,
+      "descripcion": "Escenario más probable de segunda ronda"
+    },
+    {
+      "candidato1": "LAURA FERNÁNDEZ",
+      "candidato2": "CLAUDIA DOBLES",
+      "probabilidad": 18.0,
+      "descripcion": "Segundo escenario más probable"
+    },
+    {
+      "candidato1": "LAURA FERNÁNDEZ",
+      "candidato2": "ARIEL ROBLES",
+      "probabilidad": 12.0,
+      "descripcion": "Tercer escenario más probable"
+    },
+    {
+      "candidato1": "ÁLVARO RAMOS",
+      "candidato2": "ARIEL ROBLES",
+      "probabilidad": 8.0,
+      "descripcion": "Escenario sin Laura Fernández"
+    },
+    {
+      "candidato1": "OTROS",
+      "candidato2": "LAURA FERNÁNDEZ",
+      "probabilidad": 17.0,
+      "descripcion": "Otros escenarios combinados"
+    }
+  ],
+  "notas_metodologicas": {
+    "matriz_covarianza": "Mejorada para capturar correlación entre candidatos del mismo bloque",
+    "escenario_dispersion": "Nueva en v2.1 - parte de indecisos migra a RESTO (candidaturas minoritarias)",
+    "decaimiento_temporal": {
+      "enero_2026": 1.0,
+      "diciembre_2025": 0.6,
+      "noviembre_2025": 0.3,
+      "octubre_2025": 0.15
+    },
+    "distribucion_escenarios": {
+      "balanceado": "40% - Distribución proporcional de indecisos",
+      "polarizado": "35% - Mayor concentración en top 2",
+      "dispersado": "25% - Migración significativa a candidaturas minoritarias (NUEVO)"
+    }
+  }
+}
