@@ -142,14 +142,14 @@ POLLS: List[Poll] = [
     # Datos de votantes decididos
     # =========================================================================
     Poll("ciep_ucr_4", "CIEP-UCR", "2026-01-28", "abierta", 2.5,
-         {"INDECISOS": 25.9, 
-          "LAURA FERNÁNDEZ": 43.8, 
+         {"INDECISOS": 25.9,
+          "LAURA FERNÁNDEZ": 43.8,
           "ÁLVARO RAMOS": 9.2,
           "CLAUDIA DOBLES": 8.6,  # Crecimiento significativo (de 5% a 8.6%)
           "JOSÉ AGUILAR": 2.8,
           "JUAN CARLOS HIDALGO": 2.5,  # PUSC - nuevo candidato en el modelo
           "FABRICIO ALVARADO": 1.5,
-          "ARIEL ROBLES": 1.8,  # Implícito: resto hasta completar ~96%
+          "ARIEL ROBLES": 3.8,  # Frente Amplio - CORREGIDO (era 1.8%, dato erróneo)
           "OTROS": 1.9,
           "NULO/BLANCO": 2.0},
          n_eff=1501.0),
