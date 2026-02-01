@@ -1,0 +1,613 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes esenciales
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{natbib}
+\usepackage{enumitem}
+
+% Configuración de página
+\geometry{margin=2.5cm}
+
+% Colores personalizados
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{prob_high}{RGB}{34,139,34}
+\definecolor{prob_med}{RGB}{255,165,0}
+\definecolor{prob_low}{RGB}{220,20,60}
+
+% Configuración de hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    citecolor=blue,
+}
+
+% Comandos personalizados
+\newcommand{\prob}[1]{\text{Pr}(#1)}
+\newcommand{\E}[1]{\mathbb{E}[#1]}
+\newcommand{\Var}[1]{\text{Var}(#1)}
+\newcommand{\pp}{\text{ pp}}
+
+\title{%
+\textbf{Simulación electoral de la primera ronda presidencial en Costa Rica 2026:}\\[0.3cm]
+\large Un enfoque integrado con agregación ponderada, calibración histórica y ajuste por aprobación presidencial\\[0.5cm]
+\normalsize Versión 3.3 --- Actualización 28 de enero de 2026
+}
+
+\author{
+Agustín Gómez Meléndez\thanks{Centro de Investigación en Opinión y Datos (CIOdD), Universidad de Costa Rica. Email: agustin.gomez@ucr.ac.cr.}\\
+\small CIOdD --- Universidad de Costa Rica
+}
+
+\date{31 de enero de 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Se presenta la actualización final del marco de simulación probabilística para estimar la probabilidad de que Laura Fernández (Pueblo Soberano) supere el umbral constitucional del 40\% del voto válido en la primera ronda presidencial de Costa Rica 2026. Esta versión 3.3 incorpora tres módulos de calibración histórica novedosos: (1) análisis de errores encuestas CIEP-UCR vs resultados TSE (2006--2022), (2) patrones de victorias en primera ronda desde 1982, y (3) efecto de la aprobación presidencial sobre el voto continuista. Con la última encuesta CIEP-UCR del 28 de enero (Laura = 43.8\%, indecisos = 25.9\%) y 200,000 simulaciones Monte Carlo, el modelo estima $\prob{\text{Laura} \geq 40\%} = 89.2\%$ con media proyectada de 44.1\%. La alta aprobación del presidente Chaves (52\%)---2.7 veces superior al promedio histórico de 19.3\%---representa un factor atípico favorable que contrarresta parcialmente la ``era de fragmentación extrema'' observada desde 2014.
+
+\medskip
+\noindent\textbf{Palabras clave:} pronóstico electoral; Monte Carlo; calibración histórica; aprobación presidencial; Costa Rica 2026.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%=============================================================================
+\section{Introducción}
+%=============================================================================
+
+\subsection{Contexto de la actualización}
+
+Esta versión 3.3 del modelo de simulación electoral representa una extensión metodológica sustancial respecto a las versiones anteriores. Además de incorporar la última encuesta del Centro de Investigación en Estudios Políticos (CIEP) de la Universidad de Costa Rica, publicada el 28 de enero de 2026, introduce tres módulos de calibración basados en datos históricos:
+
+\begin{enumerate}[label=(\arabic*)]
+    \item \textbf{Calibración por errores históricos:} Análisis sistemático de las desviaciones entre encuestas CIEP-UCR y resultados oficiales del TSE en las cinco elecciones anteriores (2006--2022).
+    
+    \item \textbf{Calibración por victorias en primera ronda:} Incorporación de los patrones observados en las únicas victorias con más del 40\% desde 1982, incluyendo la tendencia descendente y el ``techo histórico'' de votación.
+    
+    \item \textbf{Calibración por aprobación presidencial:} Ajuste basado en la relación empírica entre la aprobación del presidente saliente y el desempeño del candidato continuista.
+\end{enumerate}
+
+La encuesta del 28 de enero sitúa a Laura Fernández en 43.8\%---3.8 puntos porcentuales por encima del umbral constitucional---con indecisos reducidos al 25.9\%, el mínimo de toda la campaña.
+
+\subsection{Pregunta de investigación}
+
+\textit{¿Cuál es la probabilidad de que Laura Fernández gane en primera ronda las elecciones presidenciales de Costa Rica 2026, superando el 40\% del voto válido, dada la información disponible al 28 de enero de 2026 y los patrones históricos observados en elecciones anteriores?}
+
+\subsection{Innovaciones respecto a versiones anteriores}
+
+La Tabla~\ref{tab:versiones} presenta la evolución del modelo a través de sus versiones.
+
+\begin{table}[H]
+\centering
+\caption{Evolución del modelo de simulación electoral Costa Rica 2026.}
+\label{tab:versiones}
+\begin{tabular}{@{}llp{8cm}@{}}
+\toprule
+\textbf{Versión} & \textbf{Fecha} & \textbf{Innovaciones principales} \\
+\midrule
+v1.0 & Dic 2025 & Modelo base con agregación ponderada \\
+v2.0 & 21 ene 2026 & Incorporación encuesta CIEP enero 21 \\
+v3.0 & 28 ene 2026 & Última encuesta CIEP; reducción $\sigma_{\text{sistemático}}$ \\
+\textbf{v3.3} & \textbf{28 ene 2026} & \textbf{Calibración histórica completa: errores CIEP-TSE + victorias 1ª ronda + aprobación presidencial} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%=============================================================================
+\section{Datos}
+%=============================================================================
+
+\subsection{Encuestas de intención de voto}
+
+Se compilaron 15 encuestas (octubre 2025--enero 2026). El modelo utiliza 9 instrumentos tipo papeleta simulada, lista o abierta con filtro de votantes probables. La Tabla~\ref{tab:encuestas} presenta el detalle.
+
+\begin{table}[H]
+\centering
+\caption{Encuestas incluidas en el modelo (octubre 2025--enero 2026).}
+\label{tab:encuestas}
+\small
+\begin{tabular}{@{}llllcc@{}}
+\toprule
+\textbf{ID} & \textbf{Encuestadora} & \textbf{Fecha} & \textbf{Tipo} & \textbf{MoE} & \textbf{Laura (\%)} \\
+\midrule
+opol\_1 & OPOL & 29-oct-25 & Papeleta & 2.2 & 31.2 \\
+opol\_2 & OPOL & 12-nov-25 & Papeleta & 2.16 & 21.0 \\
+opol\_3 & OPOL & 25-nov-25 & Papeleta & 2.10 & 37.9 \\
+ciep\_ucr\_2 & CIEP-UCR & 3-dic-25 & Papeleta & 2.3 & 37.7 \\
+demoscopia\_2 & Demoscopia & 16-dic-25 & Papeleta & 2.83 & 27.4 \\
+opol\_5 & OPOL & 23-dic-25 & Papeleta & 2.11 & 39.5 \\
+cid\_gallup & CID Gallup & 6-ene-26 & Lista & 2.87 & 41.0 \\
+ciep\_ucr\_3 & CIEP-UCR & 21-ene-26 & Abierta$^a$ & 3.1 & 40.0 \\
+\textbf{ciep\_ucr\_4} & \textbf{CIEP-UCR} & \textbf{28-ene-26} & \textbf{Abierta$^a$} & \textbf{2.5} & \textbf{43.8} \\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize $^a$ Pregunta abierta telefónica con filtro de votantes probables.}
+\end{tabular}
+\end{table}
+
+\subsection{Ficha técnica: CIEP-UCR 28 de enero 2026}
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Población objetivo:} Ciudadanía costarricense $\geq$18 años con teléfono celular ($\approx$97.5\% cobertura).
+    \item \textbf{Marco muestral:} Plan Nacional de Numeración de SUTEL.
+    \item \textbf{Tamaño de muestra:} 1,501 entrevistas completas.
+    \item \textbf{Margen de error:} $\pm$2.5 pp (95\% de confianza).
+    \item \textbf{Trabajo de campo:} 20--23 y 26 de enero de 2026.
+    \item \textbf{Coordinador:} Ronald Alfaro Redondo.
+\end{itemize}
+
+\textbf{Resultados principales (votantes decididos):}
+\begin{itemize}[noitemsep]
+    \item Laura Fernández (PPSO): 43.8\%
+    \item Álvaro Ramos (PLN): 9.2\%
+    \item Claudia Dobles (CAC): 8.6\%
+    \item José Aguilar (Avanza): 2.8\%
+    \item Juan Carlos Hidalgo (PUSC): 2.5\%
+    \item Fabricio Alvarado (NR): 1.5\%
+    \item Indecisos: 25.9\%
+\end{itemize}
+
+%=============================================================================
+\section{Calibración histórica}
+%=============================================================================
+
+La versión 3.3 introduce un módulo de calibración basado en tres fuentes de información histórica que permiten ajustar la incertidumbre del modelo de manera empíricamente fundamentada.
+
+\subsection{Errores históricos CIEP-UCR vs TSE (2006--2022)}
+
+Se analizaron las desviaciones entre la última encuesta CIEP-UCR (dentro de 2 meses de la elección) y los resultados oficiales del TSE en primera ronda para las cinco elecciones más recientes.
+
+\begin{table}[H]
+\centering
+\caption{Errores históricos encuestas CIEP-UCR vs resultados TSE.}
+\label{tab:errores_historicos}
+\begin{tabular}{@{}cccccl@{}}
+\toprule
+\textbf{Año} & \textbf{Indec.} & \textbf{Líder encuesta} & \textbf{Error líder} & \textbf{Sorpresa} & \textbf{Resultado 1º} \\
+\midrule
+2022 & 41\% & Figueres (PLN) & +10.3 pp & No & 27.3\% \\
+2018 & 27\% & Castro (PIN) & $-$18.0 pp & \textbf{Sí} & 24.9\% \\
+2014 & 30\% & Araya (PLN) & +12.3 pp & \textbf{Sí} & 30.6\% \\
+2010 & 25\% & Chinchilla (PLN) & +8.8 pp & No & 46.8\% \\
+2006 & 22\% & Arias (PLN) & +5.9 pp & No & 40.9\% \\
+\midrule
+\multicolumn{2}{l}{\textbf{Promedio}} & & \textbf{+3.9 pp} & \textbf{40\%} & \\
+\multicolumn{2}{l}{\textbf{Error absoluto}} & & \textbf{11.1 pp} & & \\
+\multicolumn{2}{l}{\textbf{Desv. estándar}} & & \textbf{12.4 pp} & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Hallazgos clave:}
+\begin{itemize}
+    \item \textbf{Tasa de sorpresas:} 40\% de las elecciones (2014, 2018) mostraron resultados donde el líder de encuestas no ganó o colapsó.
+    \item \textbf{Error absoluto promedio:} 11.1 pp, sustancialmente mayor que el margen de error muestral típico ($\pm$2.5 pp).
+    \item \textbf{Correlación indecisión$\leftrightarrow$error:} 0.17 (débil), sugiriendo que el nivel de indecisos no predice bien la magnitud del error.
+\end{itemize}
+
+\subsection{Victorias en primera ronda (1982--2010)}
+
+Se compilaron todas las victorias con más del 40\% desde el retorno a la democracia competitiva. La Tabla~\ref{tab:victorias_1r} presenta los datos.
+
+\begin{table}[H]
+\centering
+\caption{Victorias en primera ronda ($\geq$40\%) en Costa Rica, 1982--2010.}
+\label{tab:victorias_1r}
+\begin{tabular}{@{}clccc@{}}
+\toprule
+\textbf{Año} & \textbf{Ganador/a} & \textbf{\% votos válidos} & \textbf{Diputados} & \textbf{Era} \\
+\midrule
+1982 & Luis Alberto Monge (PLN) & 58.80\% & 33 & Bipartidismo \\
+1986 & Óscar Arias Sánchez (PLN) & 52.34\% & 29 & Bipartidismo \\
+1990 & Rafael Ángel Calderón (PUSC) & 47.03\% & 25 & Bipartidismo \\
+1994 & José María Figueres (PLN) & 49.62\% & 28 & Bipartidismo \\
+2006 & Óscar Arias Sánchez (PLN) & 40.92\% & 25 & Transición \\
+2010 & Laura Chinchilla (PLN) & 46.78\% & 24 & Transición \\
+\midrule
+\multicolumn{2}{l}{\textbf{Promedio bipartidismo (1982--1998)}} & \textbf{51.0\%} & & \\
+\multicolumn{2}{l}{\textbf{Promedio transición (2006--2010)}} & \textbf{43.9\%} & & \\
+\multicolumn{2}{l}{\textbf{Mínimo histórico}} & \textbf{40.92\%} & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Observaciones críticas:}
+\begin{enumerate}
+    \item \textbf{Tendencia descendente:} El porcentaje del ganador ha caído de 58.8\% (1982) a 46.8\% (2010), con pendiente de $-$0.44 pp por año.
+    \item \textbf{16 años sin victoria en primera ronda:} Desde 2010, ningún candidato ha superado el 40\% (2014, 2018, 2022 requirieron segunda ronda).
+    \item \textbf{Correlación votos$\leftrightarrow$diputados:} 0.92, indicando que victorias amplias se asocian con bancadas fuertes.
+\end{enumerate}
+
+\textbf{Implicación para 2026:} Laura Fernández con 43.8\% está en territorio histórico inédito---ningún ganador en primera ronda desde 1982 ha obtenido menos de 46.78\% (excepto Arias 2006 con 40.92\% tras reconteo extendido).
+
+\subsection{Aprobación presidencial y voto continuista}
+
+Se recopiló información sobre la aprobación del presidente saliente al final de su mandato y el desempeño del candidato continuista en la siguiente elección.
+
+\begin{table}[H]
+\centering
+\caption{Aprobación presidencial y resultado del candidato continuista.}
+\label{tab:aprobacion}
+\begin{tabular}{@{}lccccl@{}}
+\toprule
+\textbf{Presidente} & \textbf{Aprob. inicio} & \textbf{Aprob. final} & \textbf{$\Delta$} & \textbf{Continuista R1} & \textbf{Resultado} \\
+\midrule
+Chinchilla (2010--14) & 65\% & 15\% & $-$50 pp & 29.7\% & Perdió \\
+Solís (2014--18) & 36\% & 25\% & $-$11 pp & 21.7\% & Ganó 2ª$^a$ \\
+C. Alvarado (2018--22) & 66\% & 18\% & $-$48 pp & 0.7\% & Colapso \\
+\textbf{Chaves (2022--26)} & \textbf{79\%} & \textbf{52\%} & \textbf{$-$27 pp} & \textbf{43.8\%} & \textbf{Pendiente} \\
+\midrule
+\multicolumn{2}{l}{\textbf{Promedio histórico final}} & \textbf{19.3\%} & & & \\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize $^a$ Carlos Alvarado ganó en segunda ronda gracias a coalición anti-Fabricio.}
+\end{tabular}
+\end{table}
+
+\textbf{Situación atípica de Chaves:}
+\begin{itemize}
+    \item \textbf{Aprobación actual:} 52\% vs promedio histórico de 19.3\%.
+    \item \textbf{Ratio:} 2.7$\times$ mayor que cualquier predecesor al finalizar mandato.
+    \item \textbf{Caída moderada:} Solo $-$27 pp vs $-$48 a $-$50 pp de Chinchilla y Alvarado.
+\end{itemize}
+
+\textbf{Implicación:} La alta aprobación de Chaves representa un factor favorable para Laura Fernández que el modelo base no captura adecuadamente.
+
+%=============================================================================
+\section{Metodología}
+%=============================================================================
+
+\subsection{Modelo de agregación con tendencia temporal}
+
+\subsubsection{Ponderación temporal}
+
+Los pesos de cada encuesta $j$ se calculan como:
+\begin{equation}
+w_j = n_j^e \cdot \exp\left(-\frac{\ln 2}{t_{1/2}} \cdot d_j\right) \cdot f_j
+\label{eq:pesos}
+\end{equation}
+donde $n_j^e$ es el tamaño de muestra efectivo, $d_j$ son los días hasta la elección, $t_{1/2} = 14$ días es la vida media del \textit{decay}, y $f_j$ es un factor de ajuste por tipo de pregunta (1.0 para papeleta/lista, 0.7 para abierta).
+
+\subsubsection{Estimación de tendencia}
+
+Se ajusta una regresión lineal ponderada sobre los valores de Laura Fernández:
+\begin{equation}
+\hat{y}_{\text{Laura},t} = \hat{\beta}_0 + \hat{\beta}_1 \cdot t
+\end{equation}
+
+La pendiente estimada para las últimas tres encuestas es $\hat{\beta}_1 = +0.19$ pp/día.
+
+\subsubsection{Cuantificación de incertidumbre con calibración}
+
+El error estándar total incorpora los ajustes de calibración histórica:
+\begin{equation}
+\text{SE}_{\text{total}} = \sqrt{\text{SE}_{\text{encuesta}}^2 + \text{RMSE}_{\text{tendencia}}^2 + \sigma_{\text{sistemático}}^2}
+\label{eq:se_total}
+\end{equation}
+donde:
+\begin{equation}
+\sigma_{\text{sistemático}} = 1.2 \times \underbrace{m_{\text{indecisión}}}_{\text{Calibración errores}} \times \underbrace{v_{\text{era}}}_{\text{Volatilidad era}} \times \underbrace{u_{\text{aprobación}}}_{\text{Factor aprobación}}
+\end{equation}
+
+\subsection{Factores de calibración para 2026}
+
+\subsubsection{Calibración por nivel de indecisión}
+
+Dado el nivel actual de indecisos (25.9\%), se aplica:
+\begin{itemize}
+    \item Multiplicador de incertidumbre: $m_{\text{indecisión}} = 1.10$
+    \item Probabilidad de sorpresa base: 40\%
+    \item Error esperado: $\pm$11.1 pp
+\end{itemize}
+
+\subsubsection{Calibración por era electoral}
+
+Costa Rica se encuentra en la ``era de fragmentación extrema'' desde 2014:
+\begin{itemize}
+    \item Factor de volatilidad: $v_{\text{era}} = 1.25$
+    \item Probabilidad base de victoria en 1ª ronda: 33\% (0 de 3 elecciones desde 2014)
+    \item Ajuste de techo: 0.0 pp (no se reduce base si candidato supera 40\%)
+\end{itemize}
+
+\subsubsection{Calibración por aprobación presidencial}
+
+Dado que Chaves termina con aprobación excepcional (52\%):
+\begin{itemize}
+    \item Bonus para candidato continuista: $+2.5$ pp
+    \item Reducción de incertidumbre: $u_{\text{aprobación}} = 0.85$ (votantes más decididos)
+    \item Reducción de probabilidad de sorpresa: de 40\% a 32\%
+\end{itemize}
+
+\subsection{Ajuste por tipología de votantes}
+
+Se mantiene el módulo de ajuste histórico:
+\begin{itemize}
+    \item Votantes habituales (31\%): sin ajuste.
+    \item Ocasionales que votan (30\%): $+0.3 \pm 0.2$ pp.
+    \item Ocasionales que se abstienen (15\%): $-0.3 \pm 0.2$ pp.
+    \item Abstención estructural (24\%): $-0.5 \pm 0.3$ pp.
+\end{itemize}
+
+\subsection{Simulación Monte Carlo}
+
+Se ejecutan $S = 200,000$ simulaciones con el siguiente algoritmo:
+
+\begin{enumerate}
+    \item \textbf{Distribución dual:}
+    \begin{itemize}
+        \item 70\% simulaciones normales: $\text{Laura}_s \sim \mathcal{N}(\hat{y}_{\text{ajustado}}, \text{SE}_{\text{total}})$
+        \item 30\% simulaciones de sorpresa: $\text{Laura}_s \sim \mathcal{N}(\hat{y}_{\text{ajustado}} - 5.5, 1.6 \times \text{SE}_{\text{total}})$
+    \end{itemize}
+    \item Aplicar ajuste estocástico por tipología de votantes.
+    \item Muestrear demás candidatos con correlación negativa.
+    \item Imponer restricción $\sum_k \text{share}_k = 100\%$.
+    \item Registrar $\mathbb{I}(\text{Laura}_s \geq 40)$.
+\end{enumerate}
+
+%=============================================================================
+\section{Resultados}
+%=============================================================================
+
+\subsection{Resultados principales}
+
+El modelo v3.3 con calibración histórica genera las siguientes proyecciones.
+
+\begin{table}[H]
+\centering
+\caption{Indicadores principales del modelo v3.3 (200,000 simulaciones).}
+\label{tab:resultados_principales}
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Métrica} & \textbf{Valor} \\
+\midrule
+$\prob{\text{Laura} \geq 40\%}$ & \textbf{89.2\%} \\
+$\prob{\text{Laura} = 1^{\text{er}} \text{ lugar}}$ & 100.0\% \\
+\midrule
+Media (Laura) & 44.1\% \\
+Mediana (Laura) & 44.4\% \\
+IC 80\% (P10--P90) & [39.8\%, 48.1\%] \\
+IC 90\% (P5--P95) & [37.6\%, 49.1\%] \\
+\midrule
+Indecisos proyectados & 25.3\% \\
+Blancos/nulos & 2.0\% \\
+\midrule
+SE total & 3.49\% \\
+Tendencia diaria & +0.19\% \\
+Bonus aprobación & +2.5 pp \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Comparación con versiones anteriores}
+
+La Tabla~\ref{tab:comparacion} presenta la evolución de los indicadores a través de las versiones del modelo.
+
+\begin{table}[H]
+\centering
+\caption{Comparación de indicadores entre versiones del modelo.}
+\label{tab:comparacion}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Métrica} & \textbf{v1.0} & \textbf{v2.0} & \textbf{v3.0} & \textbf{v3.2} & \textbf{v3.3} \\
+& (dic 25) & (21 ene) & (28 ene) & (+ hist.) & (+ aprob.) \\
+\midrule
+$\prob{\text{Laura} \geq 40\%}$ & 56.7\% & 59.4\% & 87.2\% & 75.4\% & \textbf{89.2\%} \\
+Media (Laura) & 45.0\% & 40.8\% & 43.2\% & 42.0\% & \textbf{44.1\%} \\
+Mediana (Laura) & 43.9\% & 40.8\% & 43.3\% & 42.5\% & \textbf{44.4\%} \\
+IC 80\% (ancho) & 53.6 pp & 9.1 pp & 6.7 pp & 9.5 pp & \textbf{8.3 pp} \\
+Indecisos & 41.9\% & 31.2\% & 24.8\% & 25.3\% & \textbf{25.3\%} \\
+Calibración & --- & --- & --- & Errores+era & \textbf{Completa} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Observaciones:}
+\begin{enumerate}
+    \item La versión 3.2 (solo calibración por errores y era) \textit{reduce} la probabilidad a 75.4\% al incorporar la incertidumbre histórica.
+    \item La versión 3.3 \textit{recupera} probabilidad a 89.2\% al incorporar el efecto favorable de la alta aprobación de Chaves.
+    \item El percentil 10 (P10 = 39.8\%) está prácticamente en el umbral del 40\%.
+\end{enumerate}
+
+\subsection{Distribuciones por candidato}
+
+\begin{table}[H]
+\centering
+\caption{Distribuciones simuladas del voto válido (\%) por candidato.}
+\label{tab:distribuciones}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+\textbf{Candidato} & \textbf{Media} & \textbf{Mediana} & \textbf{DE} & \textbf{P10} & \textbf{P90} \\
+\midrule
+Laura Fernández & 44.1 & 44.4 & 2.9 & 39.8 & 48.1 \\
+Álvaro Ramos & 8.9 & 8.9 & 1.6 & 6.7 & 11.1 \\
+Claudia Dobles & 8.3 & 8.3 & 1.5 & 6.2 & 10.4 \\
+José Aguilar & 2.7 & 2.7 & 1.0 & 1.5 & 3.9 \\
+Juan Carlos Hidalgo & 2.4 & 2.4 & 0.9 & 1.2 & 3.6 \\
+Fabricio Alvarado & 1.5 & 1.4 & 0.7 & 0.2 & 2.7 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Análisis de sensibilidad}
+
+\begin{table}[H]
+\centering
+\caption{Escenarios de sensibilidad con calibración histórica.}
+\label{tab:sensibilidad}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+\textbf{Escenario} & \textbf{Supuesto} & $\prob{\text{Laura} \geq 40\%}$ & \textbf{Media Laura} \\
+\midrule
+Base (modelo v3.3) & Calibración completa & 89.2\% & 44.1\% \\
+Optimista & Base + 2 pp & 94.4\% & 46.1\% \\
+Pesimista & Base $-$ 3 pp & 67.4\% & 41.1\% \\
+Sorpresa histórica & Base $-$ 5 pp & 42.3\% & 39.1\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%=============================================================================
+\section{Discusión}
+%=============================================================================
+
+\subsection{Interpretación del efecto de calibración}
+
+La incorporación de calibración histórica tiene efectos contrapuestos:
+
+\begin{enumerate}
+    \item \textbf{Efecto negativo (errores históricos + era):} La alta volatilidad observada en elecciones pasadas (error absoluto de 11.1 pp, tasa de sorpresas del 40\%) y la ``era de fragmentación extrema'' (0 victorias en primera ronda desde 2010) aumentan la incertidumbre y reducen la probabilidad de primera ronda.
+    
+    \item \textbf{Efecto positivo (aprobación presidencial):} La aprobación excepcional de Chaves (52\% vs promedio histórico de 19.3\%) representa un factor favorable sin precedentes en la era reciente. Históricamente, la baja aprobación presidencial ha correlacionado con el colapso del candidato continuista.
+\end{enumerate}
+
+El balance neto es ligeramente favorable: la probabilidad final (89.2\%) es mayor que la del modelo sin calibración (84.3\% en v3.0 Python).
+
+\subsection{Situación histórica de Laura Fernández}
+
+Laura Fernández se encuentra en una posición única:
+
+\begin{itemize}
+    \item \textbf{Por encima del umbral:} Con 43.8\%, está 3.8 pp por encima del 40\% constitucional.
+    \item \textbf{Por debajo del mínimo histórico:} Ningún ganador en primera ronda desde 1982 ha obtenido menos de 46.78\% (excepto Arias 2006 con 40.92\%).
+    \item \textbf{Factor Chaves:} Es la primera candidata continuista desde 2010 que enfrenta la elección con un presidente saliente bien evaluado.
+\end{itemize}
+
+\subsection{Factores de riesgo residuales}
+
+\begin{enumerate}
+    \item \textbf{Precedente histórico:} 16 años sin victoria en primera ronda.
+    \item \textbf{Abstencionismo diferencial:} Si la participación es inferior al 60\%.
+    \item \textbf{Error sistemático:} Si todas las encuestas tienen sesgo común hacia el oficialismo.
+    \item \textbf{Evento de última hora:} Debate final del 30 de enero.
+\end{enumerate}
+
+\subsection{Limitaciones}
+
+\begin{itemize}
+    \item \textbf{Muestra pequeña para calibración:} Solo 5 elecciones (2006--2022) para errores históricos.
+    \item \textbf{Correlación espuria potencial:} La relación aprobación$\rightarrow$voto continuista se basa en 3 observaciones.
+    \item \textbf{Cambios estructurales:} El sistema de partidos ha cambiado sustancialmente desde 2002.
+    \item \textbf{Caso atípico Chaves:} Su aprobación excepcionalmente alta es un \textit{outlier} que dificulta la extrapolación.
+\end{itemize}
+
+%=============================================================================
+\section{Conclusiones}
+%=============================================================================
+
+Con 200,000 simulaciones, 15 encuestas y calibración histórica completa (errores CIEP-TSE, victorias en primera ronda, aprobación presidencial), el modelo v3.3 estima que Laura Fernández supera el 40\% del voto válido en \textbf{89.2\%} de escenarios.
+
+\textbf{Hallazgos principales:}
+
+\begin{enumerate}
+    \item \textbf{Probabilidad alta pero no certeza:} 89.2\% implica que en aproximadamente 1 de cada 9 simulaciones Laura no alcanza el 40\%.
+    
+    \item \textbf{Factores favorables:}
+    \begin{itemize}
+        \item Encuesta final en 43.8\% (3.8 pp sobre umbral)
+        \item Aprobación de Chaves 2.7$\times$ mayor que promedio histórico
+        \item Indecisos en mínimo de campaña (25.9\%)
+    \end{itemize}
+    
+    \item \textbf{Factores de cautela:}
+    \begin{itemize}
+        \item 16 años sin victoria en primera ronda
+        \item Tasa histórica de sorpresas del 40\%
+        \item Error absoluto promedio de 11.1 pp en encuestas
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Conclusión operativa:} El escenario más probable es que Laura Fernández gane la presidencia en primera ronda el 1 de febrero de 2026. El balotaje sigue siendo matemáticamente posible pero requeriría una combinación de factores adversos que se considera improbable dada la evidencia disponible.
+
+\section*{Disponibilidad de datos y código}
+
+Archivos generados:
+\begin{itemize}[noitemsep]
+    \item \texttt{cr\_presidential\_mc\_2026\_v3\_3\_calibrated.py} (código fuente Python)
+    \item \texttt{simulacion\_cr2026\_v3\_3\_calibrated.csv} (200,000 simulaciones)
+    \item \texttt{simulacion\_cr2026\_v3\_3\_calibrated.png} (visualización)
+    \item \texttt{calibracion\_historica.csv} (datos de calibración)
+\end{itemize}
+
+\appendix
+
+\section{Parámetros del modelo de calibración}
+
+\begin{table}[H]
+\centering
+\caption{Parámetros de calibración histórica aplicados en v3.3.}
+\begin{tabular}{@{}llc@{}}
+\toprule
+\textbf{Módulo} & \textbf{Parámetro} & \textbf{Valor} \\
+\midrule
+\multirow{4}{*}{Errores históricos} & Error absoluto promedio & 11.1 pp \\
+& Tasa de sorpresas & 40\% \\
+& Correlación indecisión-error & 0.17 \\
+& Multiplicador incertidumbre & 1.10 \\
+\midrule
+\multirow{4}{*}{Era electoral} & Era actual & Fragmentación extrema \\
+& Años sin victoria 1ª ronda & 16 \\
+& Factor volatilidad & 1.25 \\
+& Prob. base victoria 1ª ronda & 33\% \\
+\midrule
+\multirow{4}{*}{Aprobación presidencial} & Aprobación Chaves & 52\% \\
+& Promedio histórico & 19.3\% \\
+& Ratio vs promedio & 2.7$\times$ \\
+& Bonus continuista & +2.5 pp \\
+& Factor reducción incertidumbre & 0.85 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Fórmulas del modelo}
+
+\subsection{Error estándar total calibrado}
+
+\begin{equation}
+\text{SE}_{\text{total}} = \sqrt{\left(\frac{\text{MoE}}{1.96}\right)^2 + \text{RMSE}_{\text{tendencia}}^2 + \sigma_{\text{sistemático}}^2}
+\end{equation}
+
+donde:
+\begin{equation}
+\sigma_{\text{sistemático}} = 1.2 \times m_{\text{indecisión}} \times v_{\text{era}} \times u_{\text{aprobación}}
+\end{equation}
+
+Para v3.3:
+\begin{align}
+\text{SE}_{\text{encuesta}} &= \frac{2.5}{1.96} = 1.28\% \\
+\text{RMSE}_{\text{tendencia}} &= 2.93\% \\
+\sigma_{\text{sistemático}} &= 1.2 \times 1.10 \times 1.25 \times 0.85 = 1.40\% \\
+\text{SE}_{\text{total}} &= \sqrt{1.28^2 + 2.93^2 + 1.40^2} = 3.49\%
+\end{align}
+
+\subsection{Base ajustada}
+
+\begin{equation}
+\hat{y}_{\text{ajustado}} = y_{\text{última encuesta}} + \beta_1 \times d_{\text{restantes}} \times 0.5 + \text{bonus}_{\text{aprobación}}
+\end{equation}
+
+Para v3.3:
+\begin{equation}
+\hat{y}_{\text{ajustado}} = 43.8 + 0.19 \times 3 \times 0.5 + 2.5 = 46.6\%
+\end{equation}
+
+(Nota: el valor se recorta a [38, 52] y se ajusta por tipología de votantes)
+
+\end{document}
