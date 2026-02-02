@@ -278,6 +278,38 @@ plt.title('Simulación Elecciones 2026')
 plt.savefig('assets/images/simulation_results.png')
 ```
 
+## 📄 Documento post-electoral generado (10 páginas)
+
+**[Ver documento completo (PDF)](simulacion_cr2026_v3_3_postelectoral.pdf)**
+
+### Contenido del análisis
+
+**1. Resultados oficiales TSE**
+- Laura Fernández: **48.33%** (1,156,735 votos)
+- Álvaro Ramos: 33.42% (799,875 votos)
+- Participación: 69.1%
+
+**2. Evaluación del modelo v3.3**
+
+| Aspecto | Calificación |
+|---------|--------------|
+| Predicción principal (victoria 1ª ronda) | ✅ **CORRECTA** |
+| Calibración de incertidumbre | ✅ **CORRECTA** (resultado en IC 90%) |
+| Proyección media Laura | ⚠️ Subestimó 4.2 pp |
+| Predicción candidatos menores | ❌ Error masivo en Ramos |
+| Módulo aprobación presidencial | ⚠️ Dirección correcta, magnitud insuficiente |
+
+**3. Lecciones metodológicas**
+- El modelo cumplió su objetivo de cuantificar probabilidad
+- Las encuestas fallaron masivamente con Ramos (9% → 33%)
+- El efecto Chaves fue mayor al modelado (+4.5 pp vs +2.5 pp)
+- La "era de fragmentación" no aplicó: concentración bipartidista del 81.75%
+
+**4. Contexto histórico**
+- Primera victoria en 1ª ronda desde 2010 (16 años)
+- Cuarto mejor resultado desde 1982
+- Ruptura con patrón de fragmentación 2014-2022
+
 ## 🛠️ Tecnologías Utilizadas
 
 ### Frontend
