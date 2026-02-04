@@ -677,7 +677,8 @@ ui <- dashboardPage(
       menuItem("Comparativo Partidos", tabName = "partidos", icon = icon("users")),
       menuItem("Análisis por Corte", tabName = "cortes", icon = icon("layer-group")),
       menuItem("Análisis por Junta", tabName = "juntas", icon = icon("table")),
-      menuItem("Exportar Datos", tabName = "exportar", icon = icon("download"))
+      menuItem("Exportar Datos", tabName = "exportar", icon = icon("download")),
+      menuItem("Recursos y Datos", tabName = "recursos", icon = icon("database"))
     ),
     hr(),
     
@@ -1409,8 +1410,120 @@ ui <- dashboardPage(
             status = "warning",
             solidHeader = TRUE,
             width = 12,
-            HTML("<p>Los gráficos pueden exportarse directamente desde cada visualización 
+            HTML("<p>Los gráficos pueden exportarse directamente desde cada visualización
                usando el menú de Plotly (icono de cámara en la esquina superior derecha).</p>")
+          )
+        )
+      ),
+
+      # =========================================================================
+      # TAB: RECURSOS Y DATOS
+      # =========================================================================
+      tabItem(
+        tabName = "recursos",
+
+        fluidRow(
+          box(
+            title = "Resultados Preliminares - Elecciones 2026",
+            status = "primary",
+            solidHeader = TRUE,
+            width = 12,
+            HTML("
+              <div style='padding: 15px;'>
+                <h4><i class='fa fa-info-circle'></i> Acerca de este Visor</h4>
+                <p style='font-size: 14px;'>
+                  Este visor interactivo de datos electorales está actualmente <strong>ajustado únicamente
+                  para el archivo de resultados de Presidente</strong>. Próximamente se habilitará la
+                  funcionalidad para visualizar los resultados de Diputaciones.
+                </p>
+                <hr>
+                <h4><i class='fa fa-calendar'></i> Datos Disponibles (Corte: 3 de Febrero de 2026)</h4>
+                <p>Los siguientes archivos contienen los resultados preliminares de las elecciones:</p>
+              </div>
+            ")
+          )
+        ),
+
+        fluidRow(
+          box(
+            title = "Archivo de Resultados - Presidente",
+            status = "success",
+            solidHeader = TRUE,
+            width = 6,
+            HTML("
+              <div style='text-align: center; padding: 20px;'>
+                <i class='fa fa-file-excel' style='font-size: 48px; color: #28a745;'></i>
+                <h4 style='margin-top: 15px;'>Elección Presidencial</h4>
+                <p><strong>Archivo:</strong> consolidadoResultadosEleccionPresidencial2026 – Presidente.xlsx</p>
+                <p><em>Resultados preliminares de la elección presidencial al 3 de febrero de 2026</em></p>
+                <span class='label label-success'>Disponible para visualización</span>
+              </div>
+            "),
+            footer = HTML("<p style='font-size: 12px; color: #666;'><i class='fa fa-check-circle'></i> Compatible con este visor</p>")
+          ),
+          box(
+            title = "Archivo de Resultados - Diputados",
+            status = "warning",
+            solidHeader = TRUE,
+            width = 6,
+            HTML("
+              <div style='text-align: center; padding: 20px;'>
+                <i class='fa fa-file-excel' style='font-size: 48px; color: #ffc107;'></i>
+                <h4 style='margin-top: 15px;'>Elección de Diputados</h4>
+                <p><strong>Archivo:</strong> consolidadoResultadosEleccionPresidencial2026 – Diputado.xlsx</p>
+                <p><em>Resultados preliminares de la elección de diputados al 3 de febrero de 2026</em></p>
+                <span class='label label-warning'>Próximamente disponible</span>
+              </div>
+            "),
+            footer = HTML("<p style='font-size: 12px; color: #999;'><i class='fa fa-clock'></i> Visualización en desarrollo</p>")
+          )
+        ),
+
+        fluidRow(
+          box(
+            title = "Instrucciones de Uso",
+            status = "info",
+            solidHeader = TRUE,
+            width = 12,
+            collapsible = TRUE,
+            HTML("
+              <div style='padding: 10px;'>
+                <h5><i class='fa fa-upload'></i> Para visualizar los datos de Presidente:</h5>
+                <ol>
+                  <li>En el panel lateral izquierdo, haga clic en <strong>'Buscar...'</strong> en la sección 'Carga de Datos'</li>
+                  <li>Seleccione el archivo <code>consolidadoResultadosEleccionPresidencial2026 – Presidente.xlsx</code></li>
+                  <li>Haga clic en <strong>'Cargar / Recargar'</strong></li>
+                  <li>Navegue por las diferentes secciones para explorar los resultados</li>
+                </ol>
+                <hr>
+                <h5><i class='fa fa-cogs'></i> Funcionalidades disponibles:</h5>
+                <ul>
+                  <li><strong>Resumen Nacional:</strong> Vista general de resultados y distribución del voto</li>
+                  <li><strong>Métricas de Ciencia Política:</strong> Índices NEP, Rae, concentración y competitividad</li>
+                  <li><strong>Evolución Temporal:</strong> Seguimiento del escrutinio por cortes</li>
+                  <li><strong>Análisis Geográfico:</strong> Resultados por provincia, cantón y distrito</li>
+                  <li><strong>Comparativo Partidos:</strong> Análisis detallado por partido político</li>
+                  <li><strong>Exportar Datos:</strong> Descarga de datos en formato Excel o CSV</li>
+                </ul>
+              </div>
+            ")
+          )
+        ),
+
+        fluidRow(
+          box(
+            title = "Información del Sistema",
+            status = "default",
+            solidHeader = TRUE,
+            width = 12,
+            HTML("
+              <div style='padding: 10px; background-color: #f9f9f9; border-radius: 5px;'>
+                <p><strong>Sistema de Gestión y Análisis Electoral - Costa Rica 2026</strong></p>
+                <p><i class='fa fa-university'></i> Desarrollado por: CIOdD - Universidad de Costa Rica</p>
+                <p><i class='fa fa-code-branch'></i> Versión: 2.0</p>
+                <p><i class='fa fa-calendar-alt'></i> Última actualización de datos: 3 de febrero de 2026</p>
+              </div>
+            ")
           )
         )
       )
